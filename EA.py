@@ -45,14 +45,17 @@ class EA:
             self.generation = self.survivorSelection(numGen)
             genWiseFitness.append(self.genWiseFitness())
         
-        return genWiseFitness
+        genWiseFitness = np.array(genWiseFitness)
+        
         
     
     def runKTimes(popSize, numGen, mutRate, numOffSpring, iterations):
         iterWiseFitness = []
         for i in range(iterations):
             iterWiseFitness.append(self.runOnce(popSize, numGen, mutRate, numOffSpring)
-        return iterWiseFitness
+        iterWiseFitness = np.array(genWiseFitness)
+        iterWiseAvgs = iterWiseFitness.mean(axis = 0)
+        plt.plot(
             
 
 
