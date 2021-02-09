@@ -36,9 +36,9 @@ class EA:
         genWiseFitness.append(self.genFitness())
         
         for gen in range(numGen):
-            for offS in range(numOffSpring):
-                parents = self.parentSelection(2)
-                newIndividual = self.crosover(parents[0], parents[2])
+            parents = self.parentSelection(numOffSpring * 2)
+            for i in range(0, numOffSpring, 2):                
+                newIndividual = self.crosover(parents[i], parents[i+1])
                 newIndividual = self.mutation(newIndividual)
                 self.generation.append(newIndividual)
             
