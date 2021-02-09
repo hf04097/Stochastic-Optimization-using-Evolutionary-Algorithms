@@ -56,7 +56,7 @@ class EA:
         return genWiseFitnessAvgs, genWiseFitnessMaxs
         
     
-    def runKTimes(self, popSize, numGen, mutRate, numOffSpring, iterations):
+    def runKTimes(self, popSize = 30, numGen = 100, mutRate = 0.5, numOffSpring = 10, iterations = 10):
         iterWiseFitnessAvgs = []
         iterWiseFitnessMaxs = []
         for i in range(iterations):
