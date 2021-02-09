@@ -24,9 +24,15 @@ class KnapsackEAInstance:
         
 
 class KnapsackEA:
-    def __init__(self):
+    def __init__(self, fileName):
+        file = open('fileName')
+        items, capacity = map(int, fileName.readline().strip().split())
         self.allItems = []
         self.capacity = capacity
+
+        for i in range(items):
+            profit, weight = map(int, fileName.readline().strip().split())
+            self.allItems(Item(weight, profit)
         
     def initializePopulation(self, popSize):
         gen = []
