@@ -3,6 +3,7 @@ import random
 import math
 import matplotlib.pyplot as plt
 from tsp import TSP
+from knapsack import KnapsackEA
 from selection import Selection
 
 
@@ -52,7 +53,7 @@ class EA:
         
         genWiseFitness = np.array(genWiseFitness)
         genWiseFitnessAvgs = genWiseFitness.mean(axis = 1)
-        genWiseFitnessMaxs = np.maximum.accumulate(genWiseFitness, axis = 1)
+        genWiseFitnessMaxs = np.maximum.accumulate(genWiseFitness.max(axis = 1), axis = 0)
         return genWiseFitnessAvgs, genWiseFitnessMaxs
         
     
@@ -66,19 +67,22 @@ class EA:
         iterWiseFitnessAvgs = np.array(iterWiseFitnessAvgs)
         iterWiseFitnessMaxs = np.array(iterWiseFitnessMaxs)
         iterWiseAvgs = iterWiseFitnessAvgs.mean(axis = 0)
-        iterWiseMaxs = np.maximum.accumulate(iterWiseFitnessMaxs, axis = 0)
-        plt.plot(range(len(iterWiseAvgs)), 1 / iterWiseAvgs)
+        iterWiseMaxs = np.maximum.accumulate(iterWiseFitnessMaxs, axis = 1).max(axis = 0)
+        plt.plot(range(numGen + 1), iterWiseAvgs)
         plt.xlabel("generations")
         plt.ylabel("average across iterations")
         plt.show()
         
 
 population = 30
-numGen = 500
+numGen = 100
 mutRate = 0.5
-numOffSpring = 10
+numOffSpring = 100
 iterations = 10
-problem = TSP("city.tsp")
+
+# problem = TSP("city.tsp")
+problem = KnapsackEA("f2_l-d_kp_20_878")
+
 selobj = Selection(problem)
 
 eaobject = EA(problem, selobj.BinaryTournamentSelection, selobj.FitnessProportionalSelection)
