@@ -79,45 +79,6 @@ class TSP:
             fitness = 1 / float(distance)
         return fitness
 
-    class Selection:
-        def __init__(self, population, selection_size,problem):
-            self.selected = []
-            self.population = population
-            self.selection_size = selection_size
-            self.problem = problem
-
-        def FitnessProportionalSelection(self):
-            sum_fitness = sum([self.problem.Fitness(route) for route in self.population])
-            selection_prob = [self.problem.Fitness(route) / sum_fitness for route in self.population]
-            for i in range(self.selection_size):
-                self.selected.append(self.population[np.random.choice(len(self.population), p=selection_prob)])
-            return self.selected
-
-        def RankBasedSelection(self):
-            worst_sorted_fitness = sorted(self.population, key=lambda agent: self.problem.Fitness(agent),reverse=True)
-            ranks = np.arange(len(worst_sorted_fitness))
-            selection_prob = [r / sum(ranks) for r in ranks]
-            for i in range(self.selection_size):
-                self.selected.append( worst_sorted_fitness[np.random.choice(len(worst_sorted_fitness), p=selection_prob)])
-            return self.selected
-
-        def BinaryTournamentSelection(self):
-            for i in range(self.selection_size):
-                binary = random.choices(self.population, k=2)
-                sorted_binary = sorted(binary, key=lambda agent: self.problem.Fitness(agent), reverse=True)
-                self.selected.append(sorted_binary[0])
-            return self.selected
-
-        def TruncationSelection(self):
-            truncation_threshold = 0.5
-            trunc = sorted(self.population, key=lambda agent: self.problem.Fitness(agent), reverse=True)[
-                    :int(len(self.population) * truncation_threshold)]
-            for i in range(self.selection_size):
-                self.selected.append(trunc[random.randint(0, len(trunc) - 1)])
-
-        def RandomSelection(self):
-            return random.sample(self.population, self.selection_size)
-
     def Crossover(self, p1, p2):
         """
         :param p1: list containing genetic material for parent one
@@ -127,7 +88,7 @@ class TSP:
         offspring_p1 = []
 
         gene_1 = int(random.random() * len(p1))
-        gene_2 = int(random.random() * len(p1))
+        gene_2 = int(random.random() * len(p2))
 
         start = min(gene_1, gene_2)
         end = max(gene_1, gene_2)
@@ -137,11 +98,11 @@ class TSP:
 
         offspring_p2 = [gene for gene in p2 if gene not in offspring_p1]
 
-        print(offspring_p1, offspring_p2, 'c')
+        # print(offspring_p1, offspring_p2, 'c')
         return offspring_p1 + offspring_p2
 
     def Mutation(self, individual):
-        gene1 = random.randint(0, len(individual))
-        gene2 = random.randint(0, len(individual))
+        gene1 = random.randint(0, len(individual) - 1)
+        gene2 = random.randint(0, len(individual) - 1)
         individual[gene1], individual[gene2] = individual[gene2], individual[gene1]
         return individual

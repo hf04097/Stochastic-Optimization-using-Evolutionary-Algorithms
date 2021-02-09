@@ -1,33 +1,41 @@
-import random
 import numpy as np
-
+import random
 
 class Selection:
-    def __init__(self, population, selection_size):
+    def __init__(self, problem):
         self.selected = []
-        self.population = population
-        self.selection_size = selection_size
+        # self.population = population
+        # self.selection_size = selection_size
+        self.problem = problem
 
-    def FitnessProportionalSelection(self):
-        for i in range(self.selection_size):
-            sum_fitness = sum([Fitness(route).routeFitness() for route in self.population])
-            selection_prob = [Fitness(route).routeFitness() / sum_fitness for route in self.population]
-            self.selected.append(self.population[np.random.choice(len(self.population), p=selection_prob)])
+    def FitnessProportionalSelection(self, population, selection_size):
+        sum_fitness = sum([self.problem.Fitness(route) for route in population])
+        selection_prob = [self.problem.Fitness(route) / sum_fitness for route in population]
+        self.selected = []
+        for i in range(selection_size):
+            # print(np.random.choice(len(population), 1, p = selection_prob))
+            self.selected.append(population[np.random.choice(len(population), 1, p=selection_prob).tolist()[0]])
         return self.selected
 
     def RankBasedSelection(self):
-        return 0
-
-    def BinaryTournamentSelection(self):
+        worst_sorted_fitness = sorted(self.population, key=lambda agent: self.problem.Fitness(agent),reverse=True)
+        ranks = np.arange(len(worst_sorted_fitness))
+        selection_prob = [r / sum(ranks) for r in ranks]
         for i in range(self.selection_size):
-            binary = random.choices(self.population, k=2)
-            sorted_binary = sorted(binary, key=lambda agent: Fitness(agent).routeFitness(), reverse=True)
+            self.selected.append( worst_sorted_fitness[np.random.choice(len(worst_sorted_fitness), p=selection_prob)])
+        return self.selected
+
+    def BinaryTournamentSelection(self, population, selection_size):
+        self.selected = []
+        for i in range(selection_size):
+            binary = random.choices(population, k=2)
+            sorted_binary = sorted(binary, key=lambda agent: self.problem.Fitness(agent), reverse=True)
             self.selected.append(sorted_binary[0])
         return self.selected
 
     def TruncationSelection(self):
         truncation_threshold = 0.5
-        trunc = sorted(self.population, key=lambda agent: Fitness(agent).routeFitness(), reverse=True)[
+        trunc = sorted(self.population, key=lambda agent: self.problem.Fitness(agent), reverse=True)[
                 :int(len(self.population) * truncation_threshold)]
         for i in range(self.selection_size):
             self.selected.append(trunc[random.randint(0, len(trunc) - 1)])
