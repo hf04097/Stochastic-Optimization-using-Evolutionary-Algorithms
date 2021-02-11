@@ -66,7 +66,7 @@ class EA:
         iterWiseFitnessMaxs = np.array(iterWiseFitnessMaxs)
         iterWiseAvgs = iterWiseFitnessAvgs.mean(axis=0)
         iterWiseMaxs = np.maximum.accumulate(iterWiseFitnessMaxs, axis=1).max(axis=0)
-        plt.plot(range(numGen + 1), iterWiseAvgs)
+        plt.plot(range(numGen + 1), 1 / iterWiseAvgs)
         plt.xlabel("generations")
         plt.ylabel("average across iterations")
         plt.savefig('results/tsp/' + 'pop_' + str(popSize) + '_gen_' + str(numGen) + '_mut_' + str(
@@ -77,15 +77,15 @@ class EA:
 
 
 population = 30
-numGen = 5
+numGen = 10
 mutRate = 0.5
-numOffSpring = 100
+numOffSpring = 10
 iterations = 10
 
-# problem = TSP("city.tsp")
-problem = KnapsackEA("f2_l-d_kp_20_878")
+problem = TSP("city.tsp")
+# problem = KnapsackEA("f2_l-d_kp_20_878")
 
 selobj = Selection(problem)
 
-eaobject = EA(problem, selobj.BinaryTournamentSelection, selobj.FitnessProportionalSelection)
+eaobject = EA(problem, selobj.BinaryTournamentSelection, selobj.RankBasedSelection)
 eaobject.runKTimes(population, numGen, mutRate, numOffSpring, iterations)

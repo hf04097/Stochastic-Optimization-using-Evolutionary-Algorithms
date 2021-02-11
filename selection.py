@@ -19,8 +19,9 @@ class Selection:
         return self.selected
 
     def RankBasedSelection(self, population, selection_size):
-        worst_sorted_fitness = sorted(population, key=lambda agent: self.problem.Fitness(agent), reverse=True)
-        ranks = np.arange(len(worst_sorted_fitness))
+        self.selected = []
+        worst_sorted_fitness = sorted(population, key=lambda agent: self.problem.Fitness(agent))
+        ranks = np.arange(1, len(worst_sorted_fitness) + 1, 1)
         selection_prob = [r / sum(ranks) for r in ranks]
         for i in range(selection_size):
             self.selected.append(worst_sorted_fitness[np.random.choice(len(worst_sorted_fitness), p=selection_prob)])
@@ -35,11 +36,13 @@ class Selection:
         return self.selected
 
     def TruncationSelection(self, population, selection_size):
+        self.selected = []
         truncation_threshold = 0.5
         trunc = sorted(population, key=lambda agent: self.problem.Fitness(agent), reverse=True)[
-                :int(len(population) * truncation_threshold)]
+                :max(int(len(population) * truncation_threshold), 1)]
         for i in range(selection_size):
             self.selected.append(trunc[random.randint(0, len(trunc) - 1)])
+        return self.selected
 
     def RandomSelection(self, population, selection_size):
-        return random.sample(population, selection_size)
+        return random.choices(population, k = selection_size)
