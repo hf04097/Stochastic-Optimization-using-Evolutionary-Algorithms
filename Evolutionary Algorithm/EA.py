@@ -82,8 +82,9 @@ mutRate = 0.5
 numOffSpring = 10
 iterations = 10
 
-problem = TSP("city.tsp")
-# problem = KnapsackEA("f2_l-d_kp_20_878")
+print("try")
+problem = TSP("data/city.tsp")
+# problem = KnapsackEA("data/f2_l-d_kp_20_878")
 
 selobj = Selection(problem)
 
